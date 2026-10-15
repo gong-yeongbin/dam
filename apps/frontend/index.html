@@ -20,9 +20,14 @@
 					opacity: 0;
 				}
 			}
-			/* 사이드바에서 선택된 메뉴: 왼쪽 청록 세로선 */
+			/* 사이드바에서 선택된 메뉴: 왼쪽 청록 세로선. Sider 안쪽을 세로 flex로 해 계정이 맨 아래 붙는다 */
 			.ant-menu-inline .ant-menu-item-selected {
 				box-shadow: inset 2px 0 0 #0b6e66;
+			}
+			.ant-layout-sider-children {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
 			}
 			@media (prefers-reduced-motion: reduce) {
 				.page {

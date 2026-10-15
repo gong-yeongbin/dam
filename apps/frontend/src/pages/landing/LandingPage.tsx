@@ -23,9 +23,9 @@ export function LandingPage() {
 		<PublicLayout>
 			<div style={{ textAlign: 'center' }}>
 				<Title level={1} style={{ fontSize: 44, lineHeight: 1.2, letterSpacing: '-0.02em', fontWeight: 700, margin: 0, whiteSpace: 'nowrap', color: colors.ink }}>
-					웹훅, 한 건도 잃지 않고 전달합니다
+					웹훅 수신 게이트웨이
 				</Title>
-				<Paragraph style={{ fontSize: 18, lineHeight: 1.65, color: colors.muted, margin: '20px auto 0', whiteSpace: 'nowrap' }}>결제·배포 웹훅을 먼저 저장하고, 고객 서버가 받을 때까지 대신 재시도합니다.</Paragraph>
+				<Paragraph style={{ fontSize: 18, lineHeight: 1.65, color: colors.muted, margin: '20px auto 0', whiteSpace: 'nowrap' }}>받은 웹훅을 저장하고, 고객 서버로 재시도하며 전달합니다.</Paragraph>
 
 				<div style={{ maxWidth: 780, margin: '72px auto 0' }}>
 					<FlowDiagram />

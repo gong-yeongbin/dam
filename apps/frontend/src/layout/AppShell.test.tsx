@@ -38,6 +38,18 @@ describe('AppShell', () => {
 		expect(screen.getByRole('textbox')).toBeDefined();
 	});
 
+	it('메뉴를 접으면 로고·프로젝트가 숨고 아이콘만 남는다. 접힘은 기억된다', () => {
+		setToken('jwt');
+		renderAt('/app/events');
+		fireEvent.click(screen.getByRole('button', { name: '메뉴 접기' }));
+		expect(screen.queryByRole('link', { name: 'relaydam' })).toBeNull();
+		expect(screen.queryByRole('combobox', { name: '프로젝트' })).toBeNull();
+		expect(localStorage.getItem('relaydam.sidebar.collapsed')).toBe('1');
+		fireEvent.click(screen.getByRole('button', { name: '메뉴 펼치기' }));
+		expect(screen.getByRole('link', { name: 'relaydam' })).toBeDefined();
+		expect(localStorage.getItem('relaydam.sidebar.collapsed')).toBe('0');
+	});
+
 	it('로그아웃하면 토큰을 지우고 /login으로 간다', async () => {
 		setToken('jwt');
 		renderAt('/app/events');

@@ -1,5 +1,6 @@
-import { PlusOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Form, Input, Layout, Menu, Modal, Select, Typography } from 'antd';
+import { ApiOutlined, CloudServerOutlined, InboxOutlined, LinkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PlusOutlined, SendOutlined, SettingOutlined, StopOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Dropdown, Form, Input, Layout, Menu, Modal, Select, Tooltip, Typography } from 'antd';
+import type React from 'react';
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { clearToken } from '@/auth/token';
@@ -7,23 +8,42 @@ import { colors } from '@/theme';
 
 const { Text } = Typography;
 
-// 사이드바 메뉴. 경로가 곧 key다
-const MENU: ({ key: string; label: string } | { type: 'divider' })[] = [
-	{ key: '/app/events', label: '이벤트' },
-	{ key: '/app/deliveries', label: '전달' },
-	{ key: '/app/rejected-requests', label: '거부된 요청' },
-	{ key: '/app/connections', label: '연결' },
-	{ key: '/app/sources', label: '소스' },
-	{ key: '/app/destinations', label: '목적지' },
+// 사이드바 메뉴. 경로가 곧 key다. 접으면 아이콘만 남는다
+const MENU: ({ key: string; label: string; icon: React.ReactNode } | { type: 'divider' })[] = [
+	{ key: '/app/events', label: '이벤트', icon: <InboxOutlined /> },
+	{ key: '/app/deliveries', label: '전달', icon: <SendOutlined /> },
+	{ key: '/app/rejected-requests', label: '거부된 요청', icon: <StopOutlined /> },
+	{ key: '/app/connections', label: '연결', icon: <LinkOutlined /> },
+	{ key: '/app/sources', label: '소스', icon: <ApiOutlined /> },
+	{ key: '/app/destinations', label: '목적지', icon: <CloudServerOutlined /> },
 	{ type: 'divider' },
-	{ key: '/app/settings', label: '설정' },
+	{ key: '/app/settings', label: '설정', icon: <SettingOutlined /> },
 ];
 
-// 대시보드 공통 틀. 왼쪽 사이드바 + 상단 바. 가운데에 화면이 들어온다
+// 접힘 상태는 이 브라우저에서만 기억한다
+const COLLAPSED_KEY = 'relaydam.sidebar.collapsed';
+const readCollapsed = () => {
+	try {
+		return localStorage.getItem(COLLAPSED_KEY) === '1';
+	} catch {
+		return false;
+	}
+};
+
+// 대시보드 공통 틀. 상단 바 없이 왼쪽 사이드바 하나. 계정은 사이드바 맨 아래. 내용은 전폭(표가 많다)
 export function AppShell() {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [creating, setCreating] = useState(false);
+	const [collapsed, setCollapsed] = useState(readCollapsed);
+	const toggle = () => {
+		setCollapsed(!collapsed);
+		try {
+			localStorage.setItem(COLLAPSED_KEY, collapsed ? '0' : '1');
+		} catch {
+			// 저장 못 해도 동작엔 지장 없다
+		}
+	};
 
 	const logout = () => {
 		clearToken();
@@ -32,14 +52,19 @@ export function AppShell() {
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			<Layout.Sider width={220} style={{ background: '#fff', borderRight: `1px solid ${colors.line}` }}>
-				<div style={{ padding: '20px 16px 12px' }}>
-					<Link to="/app" style={{ color: colors.ink, fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
-						relaydam
-					</Link>
+			<Layout.Sider width={208} collapsedWidth={64} collapsed={collapsed} trigger={null} style={{ background: colors.bg }}>
+				<div style={{ padding: collapsed ? '12px 0 8px' : '12px 12px 12px 8px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start', gap: 4 }}>
+					<Tooltip title={collapsed ? '메뉴 펼치기' : '메뉴 접기'} placement="right">
+						<Button type="text" aria-label={collapsed ? '메뉴 펼치기' : '메뉴 접기'} icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={toggle} />
+					</Tooltip>
+					{!collapsed && (
+						<Link to="/app" style={{ color: colors.ink, fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
+							relaydam
+						</Link>
+					)}
 				</div>
-				{/* 프로젝트 전환. 목록·생성은 API를 붙일 때 채운다 */}
-				<div style={{ padding: '0 16px 16px' }}>
+				{/* 프로젝트 전환. 목록·생성은 API를 붙일 때 채운다. 접으면 숨긴다 */}
+				<div style={{ padding: '0 16px 16px', display: collapsed ? 'none' : 'block' }}>
 					<Select
 						aria-label="프로젝트"
 						value="default"
@@ -69,6 +94,7 @@ export function AppShell() {
 				<Menu
 					mode="inline"
 					selectedKeys={[pathname]}
+					inlineCollapsed={collapsed}
 					items={MENU.map((item) =>
 						'key' in item
 							? {
@@ -81,23 +107,20 @@ export function AppShell() {
 								}
 							: item
 					)}
-					style={{ borderInlineEnd: 0, background: 'transparent' }}
+					style={{ borderInlineEnd: 0, background: 'transparent', flex: 1 }}
 				/>
+				{/* 계정. 사이드바 맨 아래 */}
+				<Dropdown menu={{ items: [{ key: 'logout', label: '로그아웃', onClick: logout }] }} trigger={['click']} placement="topLeft">
+					<button type="button" aria-label="내 계정" style={{ margin: 8, padding: collapsed ? 10 : '10px 12px', background: 'none', border: 0, borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start', gap: 10, textAlign: 'left' }}>
+						<Avatar size={28} icon={<UserOutlined />} />
+						{!collapsed && <Text style={{ fontSize: 14, color: colors.ink }}>내 계정</Text>}
+					</button>
+				</Dropdown>
 			</Layout.Sider>
 
-			<Layout>
-				<Layout.Header style={{ background: '#fff', height: 56, lineHeight: '56px', padding: '0 24px', borderBottom: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-					<Dropdown menu={{ items: [{ key: 'logout', label: '로그아웃', onClick: logout }] }} trigger={['click']}>
-						<button type="button" aria-label="내 계정" style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-							<Avatar size={32} icon={<UserOutlined />} />
-						</button>
-					</Dropdown>
-				</Layout.Header>
-
-				<Layout.Content style={{ padding: 32 }}>
-					<Outlet />
-				</Layout.Content>
-			</Layout>
+			<Layout.Content style={{ background: '#fff', padding: 32 }}>
+				<Outlet />
+			</Layout.Content>
 		</Layout>
 	);
 }

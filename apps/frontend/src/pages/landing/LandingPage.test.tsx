@@ -19,7 +19,7 @@ describe('LandingPage', () => {
 
 	it('제목, 흐름 그림, 특징 3개, GitHub 링크를 보여준다', () => {
 		renderLanding();
-		expect(screen.getByRole('heading', { level: 1, name: '웹훅, 한 건도 잃지 않고 전달합니다' })).toBeDefined();
+		expect(screen.getByRole('heading', { level: 1, name: '웹훅 수신 게이트웨이' })).toBeDefined();
 		expect(screen.getByRole('img', { name: /실패하면 다시 보낸다/ })).toBeDefined();
 		expect(screen.getAllByRole('heading', { level: 5 }).map((h) => h.textContent)).toEqual(['저장 먼저', '자동 재시도', '서명 검증']);
 		expect(screen.getByRole('link', { name: 'GitHub' }).getAttribute('href')).toContain('github.com');
