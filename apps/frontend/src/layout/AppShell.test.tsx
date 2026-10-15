@@ -49,6 +49,15 @@ describe('AppShell', () => {
 		expect(localStorage.getItem('relaydam.sidebar.collapsed')).toBe('0');
 	});
 
+	it('내 계정 → 사용량·조직 설정으로 간다', async () => {
+		setToken('jwt');
+		renderAt('/app/events');
+		fireEvent.click(screen.getByRole('button', { name: '내 계정' }));
+		expect(await screen.findByText('사용량')).toBeDefined();
+		fireEvent.click(screen.getByText('조직 설정'));
+		expect(await screen.findByText('준비 중')).toBeDefined();
+	});
+
 	it('로그아웃하면 토큰을 지우고 /login으로 간다', async () => {
 		setToken('jwt');
 		renderAt('/app/events');

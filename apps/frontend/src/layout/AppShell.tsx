@@ -129,7 +129,18 @@ export function AppShell() {
 					style={{ borderInlineEnd: 0, background: 'transparent', flex: 1 }}
 				/>
 				{/* 계정. 사이드바 맨 아래 */}
-				<Dropdown menu={{ items: [{ key: 'logout', label: '로그아웃', onClick: logout }] }} trigger={['click']} placement="topLeft">
+				<Dropdown
+					menu={{
+						items: [
+							{ key: 'usage', label: '사용량', onClick: () => void navigate('/app/usage') },
+							{ key: 'org', label: '조직 설정', onClick: () => void navigate('/app/org') },
+							{ type: 'divider' },
+							{ key: 'logout', label: '로그아웃', onClick: logout },
+						],
+					}}
+					trigger={['click']}
+					placement="topLeft"
+				>
 					<button type="button" aria-label="내 계정" style={{ margin: 8, padding: collapsed ? 10 : '10px 12px', background: 'none', border: 0, borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start', gap: 10, textAlign: 'left' }}>
 						<Avatar size={28} icon={<UserOutlined />} />
 						{!collapsed && <Text style={{ fontSize: 14, color: colors.ink }}>내 계정</Text>}

@@ -30,6 +30,8 @@ export function App() {
 					>
 						<Route index element={<Navigate to="/app/events" replace />} />
 						<Route path="events" element={<EventsPage />} />
+						<Route path="usage" element={<Placeholder />} />
+						<Route path="org" element={<Placeholder />} />
 						<Route path="*" element={<Placeholder />} />
 					</Route>
 				</Route>
