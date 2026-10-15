@@ -22,4 +22,15 @@ describe('App', () => {
 		);
 		expect(screen.getByRole('button', { name: /Google 계정으로 로그인/ })).toBeDefined();
 	});
+
+	it('/developers·/docs 는 준비 중이다', () => {
+		localStorage.clear();
+		render(
+			<MemoryRouter initialEntries={['/docs']}>
+				<App />
+			</MemoryRouter>
+		);
+		expect(screen.getByText('준비 중입니다.')).toBeDefined();
+		expect(screen.getByRole('link', { name: '개발자' }).getAttribute('href')).toBe('/developers');
+	});
 });

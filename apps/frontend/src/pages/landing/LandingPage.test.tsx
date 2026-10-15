@@ -25,9 +25,11 @@ describe('LandingPage', () => {
 		expect(screen.getByRole('link', { name: 'GitHub' }).getAttribute('href')).toContain('github.com');
 	});
 
-	it('로그인은 /login으로 간다', () => {
+	it('로그인·시작하기는 /login, 요금은 /pricing으로 간다', () => {
 		renderLanding();
 		expect(screen.getByRole('link', { name: '로그인' }).getAttribute('href')).toBe('/login');
+		expect(screen.getByRole('link', { name: '시작하기' }).getAttribute('href')).toBe('/login');
+		expect(screen.getByRole('link', { name: '요금' }).getAttribute('href')).toBe('/pricing');
 	});
 
 	it('이미 로그인돼 있으면 /app으로 보낸다', () => {
