@@ -1,9 +1,11 @@
-import { ApiOutlined, CloudServerOutlined, InboxOutlined, LinkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PlusOutlined, SendOutlined, SettingOutlined, StopOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Form, Input, Layout, Menu, Modal, Select, Tooltip, Typography } from 'antd';
+import { ApiOutlined, CloudServerOutlined, InboxOutlined, LinkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PlusOutlined, SendOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Dropdown, Form, Input, Layout, Menu, Modal, Select, Tooltip, Typography, message } from 'antd';
 import type React from 'react';
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router';
+import { useProject } from '@/auth/project';
 import { clearToken } from '@/auth/token';
+import { errorMessage } from '@/api/client';
 import { colors } from '@/theme';
 
 const { Text } = Typography;
@@ -12,7 +14,6 @@ const { Text } = Typography;
 const MENU: ({ key: string; label: string; icon: React.ReactNode } | { type: 'divider' })[] = [
 	{ key: '/app/events', label: '이벤트', icon: <InboxOutlined /> },
 	{ key: '/app/deliveries', label: '전달', icon: <SendOutlined /> },
-	{ key: '/app/rejected-requests', label: '거부된 요청', icon: <StopOutlined /> },
 	{ key: '/app/connections', label: '연결', icon: <LinkOutlined /> },
 	{ key: '/app/sources', label: '소스', icon: <ApiOutlined /> },
 	{ key: '/app/destinations', label: '목적지', icon: <CloudServerOutlined /> },
@@ -35,6 +36,23 @@ export function AppShell() {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [creating, setCreating] = useState(false);
+	const [name, setName] = useState('');
+	const [saving, setSaving] = useState(false);
+	const project = useProject();
+	const submit = async () => {
+		const orgId = project.current?.org.id ?? project.orgs[0]?.id;
+		if (!orgId || !name.trim()) return;
+		setSaving(true);
+		try {
+			await project.create(orgId, name.trim());
+			setCreating(false);
+			setName('');
+		} catch (error) {
+			void message.error(errorMessage(error));
+		} finally {
+			setSaving(false);
+		}
+	};
 	const [collapsed, setCollapsed] = useState(readCollapsed);
 	const toggle = () => {
 		setCollapsed(!collapsed);
@@ -67,9 +85,11 @@ export function AppShell() {
 				<div style={{ padding: '0 16px 16px', display: collapsed ? 'none' : 'block' }}>
 					<Select
 						aria-label="프로젝트"
-						value="default"
+						loading={project.loading}
+						value={project.current?.id}
+						placeholder="프로젝트"
 						options={[
-							{ value: 'default', label: '기본 프로젝트' },
+							...project.projects.map((p) => ({ value: p.id, label: p.name })),
 							{
 								value: 'new',
 								label: (
@@ -79,15 +99,14 @@ export function AppShell() {
 								),
 							},
 						]}
-						onChange={(value) => value === 'new' && setCreating(true)}
+						onChange={(value: number | 'new') => (value === 'new' ? setCreating(true) : project.select(value))}
 						style={{ width: '100%' }}
 					/>
 				</div>
-				{/* 만들기는 프로젝트 API를 붙일 때 연결한다 */}
-				<Modal title="새 프로젝트" open={creating} onCancel={() => setCreating(false)} onOk={() => setCreating(false)} okText="만들기" cancelText="취소">
-					<Form layout="vertical">
+				<Modal title="새 프로젝트" open={creating} onCancel={() => setCreating(false)} onOk={() => void submit()} okText="만들기" cancelText="취소" confirmLoading={saving} okButtonProps={{ disabled: !name.trim() }}>
+					<Form layout="vertical" onFinish={() => void submit()}>
 						<Form.Item label="이름" required>
-							<Input placeholder="예: shop" />
+							<Input placeholder="예: shop" value={name} onChange={(e) => setName(e.target.value)} />
 						</Form.Item>
 					</Form>
 				</Modal>

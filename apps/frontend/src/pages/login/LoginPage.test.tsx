@@ -23,11 +23,21 @@ describe('LoginPage', () => {
 		expect(screen.getByText('처음이면 계정이 자동으로 만들어집니다')).toBeDefined();
 	});
 
-	it('버튼을 누르면 토큰을 저장하고 /app으로 간다 (구글 연동 전 임시)', () => {
+	it('버튼을 누르면 VITE_DEV_TOKEN(없으면 dev)을 저장하고 /app으로 간다 (구글 연동 전 임시)', () => {
+		vi.stubEnv('VITE_DEV_TOKEN', 'token-from-env');
+		renderLogin();
+		fireEvent.click(screen.getByRole('button', { name: /Google 계정으로 로그인/ }));
+		expect(localStorage.getItem('relaydam.token')).toBe('token-from-env');
+		expect(screen.getByText('대시보드')).toBeDefined();
+		vi.unstubAllEnvs();
+	});
+
+	it('VITE_DEV_TOKEN이 비어 있으면 dev를 넣는다', () => {
+		vi.stubEnv('VITE_DEV_TOKEN', '');
 		renderLogin();
 		fireEvent.click(screen.getByRole('button', { name: /Google 계정으로 로그인/ }));
 		expect(localStorage.getItem('relaydam.token')).toBe('dev');
-		expect(screen.getByText('대시보드')).toBeDefined();
+		vi.unstubAllEnvs();
 	});
 
 	it('이미 로그인돼 있으면 /app으로 보낸다', () => {

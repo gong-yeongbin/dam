@@ -11,6 +11,8 @@ export default defineConfig({
 	},
 	server: {
 		port: 3000,
+		// 백엔드에 CORS 없이 붙는다. 프론트는 /api로 부르고 프록시가 떼어 넘긴다. 다른 포트면 VITE_API_TARGET
+		proxy: { '/api': { target: process.env.VITE_API_TARGET ?? 'http://localhost:3001', rewrite: (path) => path.replace(/^\/api/, '') } },
 	},
 	test: {
 		globals: true,

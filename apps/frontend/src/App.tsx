@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router';
+import { ProjectProvider } from './auth/project';
 import { RequireAuth } from './auth/RequireAuth';
 import { AppShell, Placeholder } from './layout/AppShell';
 import { ComingSoon } from './layout/PublicLayout';
 import { LandingPage } from './pages/landing/LandingPage';
+import { EventsPage } from './pages/events/EventsPage';
 import { LoginPage } from './pages/login/LoginPage';
 import { PricingPage } from './pages/pricing/PricingPage';
 
@@ -18,8 +20,16 @@ export function App() {
 				<Route path="/docs" element={<ComingSoon title="문서" />} />
 				<Route path="/login" element={<LoginPage />} />
 				<Route element={<RequireAuth />}>
-					<Route path="/app" element={<AppShell />}>
+					<Route
+						path="/app"
+						element={
+							<ProjectProvider>
+								<AppShell />
+							</ProjectProvider>
+						}
+					>
 						<Route index element={<Navigate to="/app/events" replace />} />
+						<Route path="events" element={<EventsPage />} />
 						<Route path="*" element={<Placeholder />} />
 					</Route>
 				</Route>

@@ -12,7 +12,8 @@ export function LoginPage() {
 	if (getToken()) return <Navigate to="/app" replace />;
 
 	const login = () => {
-		setToken('dev');
+		// 구글 연동 전. .env.local의 VITE_DEV_TOKEN(시드 유저 JWT)이 있으면 그걸 쓴다
+		setToken(import.meta.env.VITE_DEV_TOKEN || 'dev');
 		void navigate('/app', { replace: true });
 	};
 
