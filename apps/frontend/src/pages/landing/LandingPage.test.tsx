@@ -17,11 +17,11 @@ const renderLanding = () =>
 describe('LandingPage', () => {
 	beforeEach(() => localStorage.clear());
 
-	it('제목, 흐름 그림, 특징 3개, GitHub 링크를 보여준다', () => {
+	it('제목, 흐름 그림, 특징 3개, 시작 3단계, GitHub 링크를 보여준다', () => {
 		renderLanding();
 		expect(screen.getByRole('heading', { level: 1, name: '웹훅 수신 게이트웨이' })).toBeDefined();
 		expect(screen.getByRole('img', { name: /실패하면 다시 보낸다/ })).toBeDefined();
-		expect(screen.getAllByRole('heading', { level: 5 }).map((h) => h.textContent)).toEqual(['저장 먼저', '자동 재시도', '서명 검증']);
+		expect(screen.getAllByRole('heading', { level: 5 }).map((h) => h.textContent)).toEqual(['저장 먼저', '자동 재시도', '서명 검증', '소스 만들기', '목적지 등록', '업체에 URL 등록']);
 		expect(screen.getByRole('link', { name: 'GitHub' }).getAttribute('href')).toContain('github.com');
 	});
 
@@ -29,6 +29,7 @@ describe('LandingPage', () => {
 		renderLanding();
 		expect(screen.getByRole('link', { name: '로그인' }).getAttribute('href')).toBe('/login');
 		expect(screen.getByRole('link', { name: '시작하기' }).getAttribute('href')).toBe('/login');
+		expect(screen.getByRole('link', { name: '무료로 시작하기' }).getAttribute('href')).toBe('/login');
 		expect(screen.getByRole('link', { name: '요금' }).getAttribute('href')).toBe('/pricing');
 	});
 
