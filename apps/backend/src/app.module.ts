@@ -18,6 +18,7 @@ import { OrgModule } from './modules/orgs/org.module';
 import { ProjectModule } from './modules/projects/project.module';
 import { RejectedRequestModule } from './modules/rejected-requests/rejected-request.module';
 import { SourceModule } from './modules/sources/source.module';
+import { UsageModule } from './modules/usage/usage.module';
 import { UserModule } from './modules/users/user.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { UserModule } from './modules/users/user.module';
 		InvitationModule,
 		ProjectModule,
 		SourceModule,
+		UsageModule,
 		DestinationModule,
 		ConnectionModule,
 		IngressModule,

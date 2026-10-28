@@ -10,7 +10,7 @@ describe('App', () => {
 				<App />
 			</MemoryRouter>
 		);
-		expect(screen.getByRole('heading', { level: 1, name: '웹훅 수신 게이트웨이' })).toBeDefined();
+		expect(screen.getByRole('heading', { level: 1, name: /웹훅을 받아 두고/ })).toBeDefined();
 	});
 
 	it('/login 은 로그인이다', () => {

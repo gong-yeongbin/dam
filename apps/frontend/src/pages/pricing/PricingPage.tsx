@@ -1,10 +1,9 @@
-import { CheckOutlined } from '@ant-design/icons';
-import { Button, Card, Collapse, Typography } from 'antd';
+import { cn } from 'cn';
+import { CheckIcon } from 'lucide-react';
 import { Link } from 'react-router';
+import { Faq } from '@/components/Faq';
+import { buttonVariants } from '@/components/ui/button';
 import { PublicLayout } from '@/layout/PublicLayout';
-import { colors } from '@/theme';
-
-const { Title, Paragraph, Text } = Typography;
 
 // 값은 plan.md 결정 11과 백엔드 plan-limits.ts와 같다. 바꾸면 셋을 같이 바꾼다.
 // 초과 단가의 구간 할인(500만 건 이후)은 여기 안 적는다. 볼 사람이 거의 없다.
@@ -17,62 +16,50 @@ const PLANS = [
 // 플랜과 무관하게 전부 들어 있는 것
 const INCLUDED = ['자동 재시도 무료', '서명 검증', '대시보드에서 재전송', '내부망 주소 차단'];
 
-const FAQ = [
-	{ q: '포함 이벤트를 넘으면 어떻게 되나요?', a: 'Free는 그 달 남은 웹훅을 받지 않고 429로 거부합니다. 보낸 쪽이 실패를 알고 다시 보냅니다. Team은 초과분만큼 10만 건당 10,000원부터 청구되고, 많이 쓸수록 단가가 내려갑니다.' },
-	{ q: '플랜은 언제 바꿀 수 있나요?', a: '가입하면 Free로 시작합니다. 플랜 변경과 결제는 준비 중입니다.' },
-	{ q: '이벤트는 무엇을 세나요?', a: '받아서 저장한 웹훅 한 건이 이벤트 하나입니다. 연결된 목적지가 여러 곳이어도 한 건이고, 같은 웹훅이 다시 오면 세지 않습니다. 재시도는 세지 않고, 대시보드에서 리플레이하면 새 이벤트로 셉니다.' },
-];
-
 export function PricingPage() {
 	return (
 		<PublicLayout>
-			<div style={{ textAlign: 'center' }}>
-				<Title level={1} style={{ fontSize: 40, letterSpacing: '-0.02em', margin: 0, color: colors.ink }}>
-					요금
-				</Title>
-				<Paragraph style={{ fontSize: 18, color: colors.muted, margin: '16px 0 0' }}>월 정액에 이벤트가 포함되고, 넘으면 건당 종량입니다.</Paragraph>
-			</div>
+			<section className="px-12 pt-[96px]">
+				<h1 className="text-[40px] font-bold tracking-tight">요금</h1>
+				<p className="mt-4 text-lg text-cobalt-muted">월 정액에 이벤트가 포함되고, 넘으면 건당 종량입니다.</p>
 
-			<div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 24, marginTop: 48, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>
-				{PLANS.map((plan) => (
-					<Card key={plan.name} style={{ borderColor: colors.line }} styles={{ body: { padding: 28 } }}>
-						<Text style={{ fontSize: 15, fontWeight: 600, color: colors.muted }}>{plan.name}</Text>
-						<div style={{ marginTop: 8 }}>
-							<Text style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em', color: colors.ink }}>{plan.price}</Text>
-							<Text style={{ fontSize: 14, color: colors.muted, marginLeft: 4 }}>/ 월</Text>
-						</div>
-						<ul style={{ listStyle: 'none', padding: 0, margin: '24px 0 0', display: 'flex', flexDirection: 'column', gap: 10, fontSize: 15, color: colors.ink }}>
-							{plan.rows.map((row) => (
-								<li key={row}>{row}</li>
-							))}
-						</ul>
-						<Link to="/login">
-							<Button type="primary" block style={{ marginTop: 28 }}>
+				{/* 선 없이 한 톤 어두운 칸 둘 */}
+				<div className="mt-12 grid max-w-[880px] grid-cols-2 gap-2">
+					{PLANS.map((plan) => (
+						<div key={plan.name} className="rounded-lg bg-sand-2 p-7">
+							<p className="text-[15px] font-semibold text-cobalt-muted">{plan.name}</p>
+							<p className="mt-2">
+								<span className="text-[32px] font-bold tracking-tight">{plan.price}</span>
+								<span className="ml-1 text-sm text-cobalt-muted">/ 월</span>
+							</p>
+							<ul className="mt-6 m-0 list-none space-y-2.5 p-0 text-[15px]">
+								{plan.rows.map((row) => (
+									<li key={row}>{row}</li>
+								))}
+							</ul>
+							<Link to="/login" className={cn(buttonVariants({ size: 'lg' }), 'mt-7 w-full')}>
 								시작하기
-							</Button>
-						</Link>
-					</Card>
-				))}
-			</div>
-
-			<div style={{ maxWidth: 680, margin: '24px auto 0', padding: '16px 24px', background: '#fff', border: `1px solid ${colors.line}`, borderRadius: 8 }}>
-				<Text style={{ display: 'block', fontSize: 13, color: colors.muted, marginBottom: 10 }}>모든 플랜 공통</Text>
-				<div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '8px 24px' }}>
-					{INCLUDED.map((item) => (
-						<Text key={item} style={{ fontSize: 15, color: colors.ink }}>
-							<CheckOutlined style={{ color: colors.accent, marginRight: 8 }} />
-							{item}
-						</Text>
+							</Link>
+						</div>
 					))}
 				</div>
-			</div>
 
-			<div style={{ maxWidth: 680, margin: '72px auto 0' }}>
-				<Title level={4} style={{ margin: '0 0 16px', fontSize: 20, color: colors.ink }}>
-					자주 묻는 질문
-				</Title>
-				<Collapse ghost expandIconPosition="end" items={FAQ.map((item, i) => ({ key: String(i), label: <Text style={{ fontSize: 15, fontWeight: 600, color: colors.ink }}>{item.q}</Text>, children: <Paragraph style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: colors.muted }}>{item.a}</Paragraph> }))} />
-			</div>
+				<div className="mt-2 max-w-[880px] rounded-lg bg-sand-2 px-6 py-4">
+					<p className="text-[13px] text-cobalt-muted">모든 플랜 공통</p>
+					<div className="mt-2.5 grid grid-cols-2 gap-x-6 gap-y-2 text-[15px]">
+						{INCLUDED.map((item) => (
+							<p key={item} className="flex items-center gap-2">
+								<CheckIcon aria-hidden className="size-4" />
+								{item}
+							</p>
+						))}
+					</div>
+				</div>
+			</section>
+
+			<section className="max-w-[1100px] px-12 pt-[120px]">
+				<Faq />
+			</section>
 		</PublicLayout>
 	);
 }

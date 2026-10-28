@@ -1,10 +1,7 @@
-import { Button, Layout, Typography } from 'antd';
+import { cn } from 'cn';
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router';
-import { colors } from '@/theme';
-
-const { Text } = Typography;
-const SIDE = '0 48px';
+import { buttonVariants } from '@/components/ui/button';
 
 // 상단 메뉴. 페이지가 생기면 여기 경로만 바꾼다
 const NAV = [
@@ -13,43 +10,41 @@ const NAV = [
 	{ to: '/pricing', label: '요금' },
 ];
 
-// 로그인 전 화면(랜딩·요금)의 공통 틀. 상단 바 + 푸터
+// 로그인 전 화면(랜딩·요금)의 공통 틀. 모래색 바탕, 워드마크 왼쪽, 글자 링크 오른쪽. 푸터는 맨 아래 한 줄
 export function PublicLayout({ children }: { children: ReactNode }) {
 	const { pathname } = useLocation();
 	return (
-		<Layout style={{ minHeight: '100vh', background: colors.bg }}>
-			{/* 로고 왼쪽, 메뉴 가운데, 버튼 오른쪽 */}
-			<Layout.Header style={{ background: 'transparent', height: 64, lineHeight: '64px', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: SIDE }}>
-				<Link to="/" style={{ color: colors.ink, fontSize: 20, fontWeight: 700, letterSpacing: '-0.01em' }}>
-					relaydam
+		<div className="min-h-screen bg-sand text-primary">
+			<header className="flex items-center justify-between px-12 pt-7">
+				<Link to="/" className="font-heading text-2xl font-bold tracking-tight">
+					dam
 				</Link>
-				{/* 지금 보고 있는 페이지면 진하게 */}
-				<nav style={{ display: 'flex', gap: 32 }}>
+				<nav className="flex items-center gap-7 text-[15px]">
 					{NAV.map((item) => (
-						<Link key={item.to} to={item.to} style={{ color: pathname === item.to ? colors.ink : colors.muted, fontWeight: pathname === item.to ? 600 : 500, fontSize: 15 }}>
+						<Link key={item.to} to={item.to} className={cn('underline-offset-4 hover:underline', pathname === item.to ? 'font-semibold' : 'text-cobalt-muted')}>
 							{item.label}
 						</Link>
 					))}
-				</nav>
-				<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 24 }}>
-					<Link to="/login" style={{ color: colors.ink, fontSize: 15, fontWeight: 500 }}>
+					<Link to="/login" className="text-cobalt-muted underline-offset-4 hover:underline">
 						로그인
 					</Link>
-					<Link to="/login">
-						<Button type="primary">시작하기</Button>
+					<Link to="/login" className={buttonVariants({ size: 'lg' })}>
+						시작하기
 					</Link>
-				</span>
-			</Layout.Header>
+				</nav>
+			</header>
 
-			<Layout.Content style={{ maxWidth: 1040, width: '100%', margin: '0 auto', padding: '88px 48px 96px' }}>{children}</Layout.Content>
+			<main>{children}</main>
 
-			<Layout.Footer style={{ background: 'transparent', display: 'flex', justifyContent: 'space-between', padding: '24px 48px', borderTop: `1px solid ${colors.line}`, fontSize: 14, color: colors.muted }}>
-				<Text style={{ color: colors.muted }}>© 2026 relaydam</Text>
-				<a href="https://github.com/gong-yeongbin/hookbuffer" target="_blank" rel="noreferrer" style={{ color: colors.muted }}>
+			{/* 푸터 블록 없이 한 줄. 위는 비워 둔다 */}
+			<footer className="grid grid-cols-[1fr_auto_1fr] items-baseline px-12 pt-[30svh] pb-[30px] text-[15px] text-cobalt-muted">
+				<span>웹훅 수신 게이트웨이</span>
+				<a href="https://github.com/gong-yeongbin/hookbuffer" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
 					GitHub
 				</a>
-			</Layout.Footer>
-		</Layout>
+				<span className="text-right">© 2026 dam</span>
+			</footer>
+		</div>
 	);
 }
 
@@ -57,10 +52,10 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 export function ComingSoon({ title }: { title: string }) {
 	return (
 		<PublicLayout>
-			<div style={{ textAlign: 'center' }}>
-				<Text style={{ fontSize: 28, fontWeight: 700, color: colors.ink }}>{title}</Text>
-				<Text style={{ display: 'block', marginTop: 12, fontSize: 16, color: colors.muted }}>준비 중입니다.</Text>
-			</div>
+			<section className="px-12 pt-[20svh]">
+				<h1 className="text-[40px] font-bold tracking-tight">{title}</h1>
+				<p className="mt-3 text-lg text-cobalt-muted">준비 중입니다.</p>
+			</section>
 		</PublicLayout>
 	);
 }

@@ -19,6 +19,10 @@ export class ValkeyIngressCounters implements IngressCounters {
 		return this.increment(usageKey(organizationId, period), USAGE_TTL_SEC);
 	}
 
+	async getUsage(organizationId: number, period: string): Promise<number> {
+		return Number((await this.valkey.get(usageKey(organizationId, period))) ?? 0);
+	}
+
 	async allowRejectionRecord(sourceId: number, now: Date): Promise<boolean> {
 		return (await this.increment(rejectionKey(sourceId, now), 2 * 60)) <= REJECTION_RECORDS_PER_MINUTE;
 	}

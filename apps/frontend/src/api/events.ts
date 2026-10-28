@@ -1,5 +1,8 @@
 import { api, type Page } from './client';
 
+// 소스 타입·목록은 sources.ts가 주인이다. 이벤트 화면이 소스 이름을 붙일 때 쓴다
+export { listSources, type Source } from './sources';
+
 // 백엔드 DTO 그대로(snake_case). BigInt id는 문자열로 온다
 export type DeliveryStatus = 'pending' | 'succeeded' | 'failed' | 'dead' | 'canceled' | 'held';
 export type Delivery = {
@@ -32,7 +35,6 @@ export type Event = {
 };
 export type EventDetail = Event & { deliveries: Delivery[] };
 export type EventFilter = { source_id?: number; received_after?: string; received_before?: string; cursor?: string };
-export type Source = { id: number; project_id: number; slug: string; name: string };
 
 const base = (orgId: number, projectId: number) => `/orgs/${orgId}/projects/${projectId}`;
 
@@ -41,4 +43,3 @@ export const getEvent = async (orgId: number, projectId: number, id: string) => 
 // 본문은 받은 바이트 그대로. 글자로 보여준다
 export const getEventBody = async (orgId: number, projectId: number, id: string) => (await api.get<string>(`${base(orgId, projectId)}/events/${id}/body`, { responseType: 'text', transformResponse: (v: string) => v })).data;
 export const replayEvent = async (orgId: number, projectId: number, id: string) => (await api.post<Event>(`${base(orgId, projectId)}/events/${id}/replay`)).data;
-export const listSources = async (orgId: number, projectId: number) => (await api.get<Page<Source>>(`${base(orgId, projectId)}/sources`, { params: { limit: 200 } })).data.data;

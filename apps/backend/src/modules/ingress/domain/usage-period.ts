@@ -5,3 +5,9 @@ export function usagePeriod(now: Date): string {
 	const kst = new Date(now.getTime() + KST_OFFSET_MS);
 	return `${kst.getUTCFullYear()}${String(kst.getUTCMonth() + 1).padStart(2, '0')}`;
 }
+
+// 그 달의 시작 시각(KST 1일 0시)을 UTC Date로. 사용량 화면의 프로젝트별 집계가 쓴다
+export function usagePeriodStart(now: Date): Date {
+	const kst = new Date(now.getTime() + KST_OFFSET_MS);
+	return new Date(Date.UTC(kst.getUTCFullYear(), kst.getUTCMonth(), 1) - KST_OFFSET_MS);
+}

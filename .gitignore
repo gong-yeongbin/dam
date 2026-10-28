@@ -39,3 +39,7 @@ docs/webhook-gateway/context-notes.md
 
 # IntelliJ HTTP Client 비밀 값 (id_token 등)
 http-client.private.env.json
+
+# 디자인 스킬 작업 폴더 (로컬 전용)
+.taste-skill
+.impeccable

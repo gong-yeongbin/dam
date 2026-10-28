@@ -1,4 +1,4 @@
-# relaydam
+# dam (저장소 hookbuffer, 패키지 relaydam)
 
 웹훅 수신 게이트웨이. pnpm + Turborepo 모노레포. `apps/backend`(NestJS), `apps/frontend`(React),
 `packages/{eslint-config,typescript-config}`.
@@ -14,7 +14,7 @@
 
 ## 버전 동결
 
-메이저를 올리지 않는다. Node 24, pnpm 10.13.1, NestJS 11, Vitest 4, ioredis 5, React 19.
+메이저를 올리지 않는다. Node 24, pnpm 10.13.1, NestJS 11, Vitest 4, ioredis 5, React 19, Tailwind 4.
 `@nestjs/swagger`는 11.4.7 고정. 근거와 예외는 `context-notes.md` "스택 선택" 절.
 
 ## 완료 기준

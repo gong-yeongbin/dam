@@ -61,6 +61,9 @@ class FakeCounters implements IngressCounters {
 		this.usage.set(key, count);
 		return Promise.resolve(count);
 	}
+	getUsage(organizationId: number, period: string) {
+		return Promise.resolve(this.usage.get(`${organizationId}:${period}`) ?? 0);
+	}
 	allowRejectionRecord() {
 		return Promise.resolve(this.rejectionRecordAllowed);
 	}

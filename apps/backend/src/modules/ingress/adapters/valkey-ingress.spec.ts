@@ -32,6 +32,15 @@ describe('Valkey 인그레스 adapter (통합)', () => {
 			expect(ttl).toBeLessThanOrEqual(100 * 24 * 60 * 60);
 		});
 
+		it('getUsage — 아직 없으면 0, 올린 뒤에는 그 값', async () => {
+			const org = id();
+			created.push(usageKey(org, '202610'));
+			expect(await counters.getUsage(org, '202610')).toBe(0);
+			await counters.incrementUsage(org, '202610');
+			await counters.incrementUsage(org, '202610');
+			expect(await counters.getUsage(org, '202610')).toBe(2);
+		});
+
 		it('incrementUsage — 동시에 올려도 빠지지 않는다', async () => {
 			const org = id();
 			created.push(usageKey(org, '202610'));

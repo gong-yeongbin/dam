@@ -3,38 +3,11 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>relaydam</title>
+		<title>dam</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-		<style>
-			body {
-				margin: 0;
-				background: #f5f7f6;
-				font-family: Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-			}
-			/* 화면이 바뀔 때 살짝 떠오른다. 움직임을 줄인 설정이면 끈다 */
-			.page {
-				animation: page-in 150ms ease-out;
-			}
-			@keyframes page-in {
-				from {
-					opacity: 0;
-				}
-			}
-			/* 사이드바에서 선택된 메뉴: 왼쪽 청록 세로선. Sider 안쪽을 세로 flex로 해 계정이 맨 아래 붙는다 */
-			.ant-menu-inline .ant-menu-item-selected {
-				box-shadow: inset 2px 0 0 #0b6e66;
-			}
-			.ant-layout-sider-children {
-				display: flex;
-				flex-direction: column;
-				height: 100%;
-			}
-			@media (prefers-reduced-motion: reduce) {
-				.page {
-					animation: none;
-				}
-			}
-		</style>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&display=swap" rel="stylesheet" />
 	</head>
 	<body>
 		<div id="root"></div>
